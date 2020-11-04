@@ -7,6 +7,12 @@ Label Bitbucket emails in Gmail
 - Pull Request Author
 - Pull Request Reviewer
 
+## Use yourself?
+
+- Create a project on scripts.google.com
+- Copy/paste the content of `index.js`
+- Create a timed trigger that runs `init()` function every minute
+
 ## Development
 
 ```
