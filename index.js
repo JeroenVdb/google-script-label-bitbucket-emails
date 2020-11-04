@@ -1,0 +1,82 @@
+const debugEnabled = true;
+
+const LABEL = {
+	AUTHOR: 'Bitbucket/Author',
+	REVIEWER: 'Bitbucket/Reviewer',
+	MERGED: 'Bitbucket/Merged'
+}
+
+function init() {
+	const threads = getBitbucketEmails();
+
+	debug(`threads found: ${threads.length}`);
+
+	const reviewerPullRequests = threads.filter(iAmReviewer);
+	const authoredPullRequests = threads.filter(iAmAuthor);
+	const mergedPullRequests = threads.filter(isMerged);
+
+	debug(`authoredPullRequests threads found: ${authoredPullRequests.length}`);
+	debug(`reviewerPullRequests threads found: ${reviewerPullRequests.length}`);
+	debug(`mergedPullRequests threads found: ${mergedPullRequests.length}`);
+
+	authoredPullRequests.map(addAuthorLabel);
+	reviewerPullRequests.map(addReviewerLabel);
+	mergedPullRequests.map(addMergedLabel);
+	mergedPullRequests.map(silenceThread);
+
+	return threads.length;
+}
+
+function iAmReviewer(thread) {
+	return thread.getMessages()[0].getBody().includes('added you as a reviewer on pull request');
+}
+
+function iAmAuthor(thread) {
+	return !thread.getMessages()[0].getBody().includes('added you as a reviewer on pull request');
+}
+
+function isMerged(thread) {
+	const mergedThreads = thread.getMessages().filter(message => {
+		return message.getBody().includes('MERGED pull request');
+	});
+
+	return mergedThreads.length > 0;
+}
+
+function addAuthorLabel(thread) {
+	return addLabel(thread, LABEL.AUTHOR);
+}
+
+function addReviewerLabel(thread) {
+	return addLabel(thread, LABEL.REVIEWER);
+}
+
+function addMergedLabel(thread) {
+	return addLabel(thread, LABEL.MERGED);
+}
+
+function addLabel(thread, labelStr) {
+	const label = GmailApp.getUserLabelByName(labelStr);
+	return thread.addLabel(label)
+}
+
+function silenceThread(thread) {
+	debug(`Silence thread: ${thread.getMessages()[0].getSubject()}`);
+	thread.moveToArchive();
+	thread.markRead();
+	return thread;
+}
+
+function getBitbucketEmails() {
+	return GmailApp.search('from:pullrequests-reply@bitbucket.org', 0, 25);
+}
+
+function logger(str) {
+	console.log(str);
+}
+
+function debug(str) {
+	if (debugEnabled) {
+		logger(str);
+	}
+}
