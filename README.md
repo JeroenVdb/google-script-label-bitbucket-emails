@@ -23,4 +23,4 @@ npx clasp push
 npx clasp pull
 ```
 
-Enable the "Google Apps Script API" in your Settings to be able to use clasp: https://script.google.com/home/usersettings
+[Enable the "Google Apps Script API"](https://github.com/google/clasp#install) in your settings if you want to use clasp.
