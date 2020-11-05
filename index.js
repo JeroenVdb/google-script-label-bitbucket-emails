@@ -68,7 +68,11 @@ function silenceThread(thread) {
 }
 
 function getBitbucketEmails() {
-	return GmailApp.search('from:pullrequests-reply@bitbucket.org', 0, 25);
+	return GmailApp.getInboxThreads().filter(isFromBitbucket);
+}
+
+function isFromBitbucket(thread) {
+	return thread.getMessages()[0].getFrom().includes('pullrequests-reply@bitbucket.org');
 }
 
 function logger(str) {
@@ -78,5 +82,16 @@ function logger(str) {
 function debug(str) {
 	if (debugEnabled) {
 		logger(str);
+	}
+}
+
+function setupTriggers() {
+	const triggers = ScriptApp.getProjectTriggers();
+
+	if (triggers.length === 0) {
+		ScriptApp.newTrigger('init')
+			.timeBased()
+			.everyMinutes(1)
+			.create();
 	}
 }

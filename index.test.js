@@ -4,13 +4,16 @@ const app = rewire('./index.js');
 
 init = app.__get__('init');
 
-function createMockedMessage(body) {
+function createMockedMessage(body, from) {
 	return {
 		getBody: function() {
-			return body
+			return body;
 		},
 		getSubject: function() {
 			return 'foobar';
+		},
+		getFrom: function() {
+			return from;
 		}
 	}
 }
@@ -32,6 +35,9 @@ function createMockedThread(messages) {
 }
 
 GmailAppMock = {
+	getInboxThreads: function() {
+		return [threadAsAuthor, threadAsReviewer, threadAsAuthorWithMergeMessage, threadAsReviewerWithMergeMessage, threadFoobar];
+	},
 	search: function (query, start, end) {
 		return [threadAsAuthor, threadAsReviewer, threadAsAuthorWithMergeMessage, threadAsReviewerWithMergeMessage];
 	},
@@ -40,14 +46,16 @@ GmailAppMock = {
 	}
 }
 
-const mergedMessage = createMockedMessage('MERGED pull request');
-const youAreReviewerMessage = createMockedMessage('added you as a reviewer on pull request');
-const randomMessage = createMockedMessage('foobar');
+const mergedMessage = createMockedMessage('MERGED pull request', 'pullrequests-reply@bitbucket.org');
+const youAreReviewerMessage = createMockedMessage('added you as a reviewer on pull request', 'pullrequests-reply@bitbucket.org');
+const randomMessageFromBitbucket = createMockedMessage('foobar', 'pullrequests-reply@bitbucket.org');
+const randomMessageFromFoobar = createMockedMessage('foobar', 'foo@bar.org');
 
-const threadAsAuthor = createMockedThread([randomMessage]);
+const threadAsAuthor = createMockedThread([randomMessageFromBitbucket]);
 const threadAsReviewer = createMockedThread([youAreReviewerMessage]);
-const threadAsAuthorWithMergeMessage = createMockedThread([randomMessage, mergedMessage]);
+const threadAsAuthorWithMergeMessage = createMockedThread([randomMessageFromBitbucket, mergedMessage]);
 const threadAsReviewerWithMergeMessage = createMockedThread([youAreReviewerMessage, mergedMessage]);
+const threadFoobar = createMockedThread([randomMessageFromFoobar]);
 
 app.__set__('GmailApp', GmailAppMock);
 
