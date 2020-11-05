@@ -4,10 +4,13 @@ const app = rewire('./index.js');
 
 init = app.__get__('init');
 
-function createMockedMessage(body, from) {
+function createMockedMessage(body, plainBody, from) {
 	return {
 		getBody: function() {
 			return body;
+		},
+		getPlainBody: function() {
+			return plainBody;
 		},
 		getSubject: function() {
 			return 'foobar';
@@ -46,10 +49,10 @@ GmailAppMock = {
 	}
 }
 
-const mergedMessage = createMockedMessage('MERGED pull request', 'pullrequests-reply@bitbucket.org');
-const youAreReviewerMessage = createMockedMessage('added you as a reviewer on pull request', 'pullrequests-reply@bitbucket.org');
-const randomMessageFromBitbucket = createMockedMessage('foobar', 'pullrequests-reply@bitbucket.org');
-const randomMessageFromFoobar = createMockedMessage('foobar', 'foo@bar.org');
+const mergedMessage = createMockedMessage('MERGED pull request', 'been pulled into develop', 'pullrequests-reply@bitbucket.org');
+const youAreReviewerMessage = createMockedMessage('added you as a reviewer on pull request', '', 'pullrequests-reply@bitbucket.org');
+const randomMessageFromBitbucket = createMockedMessage('foobar', '', 'pullrequests-reply@bitbucket.org');
+const randomMessageFromFoobar = createMockedMessage('foobar', '', 'foo@bar.org');
 
 const threadAsAuthor = createMockedThread([randomMessageFromBitbucket]);
 const threadAsReviewer = createMockedThread([youAreReviewerMessage]);

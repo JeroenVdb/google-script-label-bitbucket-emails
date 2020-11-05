@@ -37,7 +37,7 @@ function iAmAuthor(thread) {
 
 function isMerged(thread) {
 	const mergedThreads = thread.getMessages().filter(message => {
-		return message.getBody().includes('MERGED pull request');
+		return message.getPlainBody().includes('been pulled into develop');
 	});
 
 	return mergedThreads.length > 0;
