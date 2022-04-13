@@ -20,7 +20,10 @@ function init() {
 	debug(`mergedPullRequests threads found: ${mergedPullRequests.length}`);
 
 	authoredPullRequests.map(addAuthorLabel);
+
 	reviewerPullRequests.map(addReviewerLabel);
+	reviewerPullRequests.map(silenceThread);
+
 	mergedPullRequests.map(addMergedLabel);
 	mergedPullRequests.map(silenceThread);
 
@@ -32,7 +35,7 @@ function iAmReviewer(thread) {
 }
 
 function iAmAuthor(thread) {
-	return !thread.getMessages()[0].getBody().includes('added you as a reviewer on pull request');
+	return !thread.getMessages()[0].getBody().includes('added you as a reviewer on pull request') || thread.getMessages()[0].getBody().includes('Jeroen Van den Berghe committed');
 }
 
 function isMerged(thread) {
@@ -72,7 +75,7 @@ function getBitbucketEmails() {
 }
 
 function isFromBitbucket(thread) {
-	return thread.getMessages()[0].getFrom().includes('pullrequests-reply@bitbucket.org');
+	return thread.getMessages()[0].getFrom().includes('pullrequests-reply@bitbucket.org') || thread.getMessages()[0].getFrom().includes('notifications-noreply@bitbucket.org');
 }
 
 function logger(str) {

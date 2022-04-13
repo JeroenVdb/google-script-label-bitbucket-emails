@@ -81,13 +81,13 @@ describe('Acceptance test', function() {
 
 		expect(spyForThreadAsAuthorWithMergeMessageArchive).toHaveBeenCalledTimes(1);
 		expect(spyForThreadAsAuthorWithMergeMessageRead).toHaveBeenCalledTimes(1);
-		expect(spyForThreadAsReviewerWithMergeMessageArchive).toHaveBeenCalledTimes(1);
-		expect(spyForThreadAsReviewerWithMergeMessageRead).toHaveBeenCalledTimes(1);
+		expect(spyForThreadAsReviewerWithMergeMessageArchive).toHaveBeenCalledTimes(2);
+		expect(spyForThreadAsReviewerWithMergeMessageRead).toHaveBeenCalledTimes(2);
 
 		expect(spyForThreadAsAuthorArchive).toHaveBeenCalledTimes(0);
 		expect(spyForThreadAsAuthorRead).toHaveBeenCalledTimes(0);
-		expect(spyForThreadAsReviewerArchive).toHaveBeenCalledTimes(0);
-		expect(spyForThreadAsReviewerRead).toHaveBeenCalledTimes(0);
+		expect(spyForThreadAsReviewerArchive).toHaveBeenCalledTimes(1);
+		expect(spyForThreadAsReviewerRead).toHaveBeenCalledTimes(1);
 	});
 
 	it('Should add the correct labels', function() {
